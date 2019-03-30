@@ -1,0 +1,65 @@
+x   
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+
+</head>
+<body>
+    
+    <select name="" id="authors">
+        <option value="-1">Select Authors</option>
+    </select>
+    <ul id="selected">
+
+    </ul>
+<script>
+   window.addEventListener('load', function(){
+        let resData;
+       
+        $.ajax({
+                url: "https://fakerestapi.azurewebsites.net/api/Authors",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function (data) {
+                    // console.log(data);
+                    resData = data;
+                    let htmlData = [] 
+                    data.map( item => {
+                        htmlData.push('<option value="'+ item.ID +'"> "'+item.FirstName+'" </option>'); 
+                        } 
+                     )
+
+                     htmlData = htmlData.join(' ');  
+
+                    $(htmlData).appendTo('#authors');
+                }
+            })
+
+        $('#authors').on('change', function(){
+        
+        let selectedValue = $(this).val();
+        let filterVal =  resData.filter( val => val.ID === parseInt(selectedValue) ) ;
+         
+        let filterHtml = [];
+
+        filterVal.map(val => {
+            filterHtml.push('<li> '+val.FirstName+' :'+val.LastName+' </li>'); 
+        } )
+
+        filterHtml = filterHtml.join(' ');  
+
+        $(filterHtml).appendTo('#selected');
+            
+        } )
+
+       
+   })
+</script>
+
+</body>
+</html>
